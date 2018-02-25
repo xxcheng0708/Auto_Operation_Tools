@@ -5,13 +5,20 @@
 
 import logging
 import logging.handlers
+import os
 
+# get current module path
+module_path = os.path.dirname(__file__)
+print(module_path)
+print(os.getcwd())
 logger = None
 
 def parse_log_init() :
     """parse log into config text file"""
     log_init = {}
-    with open("conf/log_init.conf" , encoding = "utf-8") as f_obj :
+
+    # file path use absolute path
+    with open(module_path + "/conf/log_init.conf" , encoding = "utf-8") as f_obj :
         for line in f_obj.readlines() :
             if line.startswith("#") :
                 continue
@@ -49,7 +56,7 @@ def logger_init() :
     # create fileHandler object wirte log to file
     # create consoleHandler object output log to console
     # fileHandler = logging.FileHandler(log_init["log_save_path"])
-    fileHandler = logging.handlers.RotatingFileHandler(filename = log_init["log_save_path"] ,
+    fileHandler = logging.handlers.RotatingFileHandler(filename = module_path + "/log/log.txt" ,
                                                        maxBytes = 1024 * 1024 * int(log_init["log_size"]) ,
                                                        backupCount = int(log_init["log_duplicates"])
                                                        )
@@ -76,8 +83,10 @@ def get_logger() :
     else :
         return logger
 
+logger = get_logger()
+
 if __name__ == '__main__' :
     # print(parse_log_init())
-    logger = get_logger()
+    # logger = get_logger()
     print(logger)
     logger.info("test")
